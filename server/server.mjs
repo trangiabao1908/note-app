@@ -5,60 +5,14 @@ import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHt
 import bodyParser from 'body-parser';
 import { expressMiddleware } from '@apollo/server/express4';
 import cors from 'cors';
-import fakeData from './fakeData/index.js';
+import 'dotenv/config';
+import mongoose from 'mongoose';
+
+import { typeDefs } from './Schema/typeDefs.js';
+import { resolvers } from './resolvers/resolvers.js';
 const app = express();
 const httpServer = http.createServer(app);
-const typeDefs = `#graphql
-  type Folder {
-    id: String,
-    name: String,
-    createdAt: String,
-    author: Author
-    notes: [Note]
-  }
-  type Author{
-    id: String,
-    name: String,
-  }
-  type Note{
-   id: String,
-   content: String,
-  }
-  type Query {
-    folders: [Folder],
-    folder(folderId: String): Folder
-    note(noteId: String): Note
-  }
 
-`;
-const resolvers = {
-   Query: {
-      folders: () => {
-         return fakeData.folders;
-      },
-      folder: (parent, args) => {
-         const folderId = args.folderId;
-         const noteId = args.noteId;
-
-         return fakeData.folders.find((folder) => folder.id === folderId);
-      },
-      note: (parent, args) => {
-         const noteId = args.noteId;
-         return fakeData.notes.find((note) => note.id === noteId);
-      },
-   },
-   Folder: {
-      author: (parent, args) => {
-         console.log({ parent, args });
-         const authorId = parent.authorId;
-         return fakeData.authors.find((author) => author.id === authorId);
-      },
-      notes: (parent, args) => {
-         const folderId = parent.id;
-         return fakeData.notes.filter((note) => note.folderId == folderId);
-      },
-   },
-};
 const server = new ApolloServer({
    typeDefs,
    resolvers,
@@ -66,10 +20,24 @@ const server = new ApolloServer({
       ApolloServerPluginDrainHttpServer({ httpServer }), // Proper shutdown for the WebSocket server.
    ],
 });
+// connect to MongoDB
+const URL = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.pf7flim.mongodb.net/?retryWrites=true&w=majority`;
+const PORT = process.env.PORT || 4000;
 
 await server.start();
 
 app.use(cors(), bodyParser.json(), expressMiddleware(server));
-
-await new Promise((resolve) => httpServer.listen({ port: 4000 }, resolve));
-console.log('🚀 Server ready at http://localhost:4000');
+mongoose.set('strictQuery', false);
+mongoose
+   .connect(URL, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+   })
+   .then(async () => {
+      console.log('Database connection');
+      await new Promise((resolve) => httpServer.listen({ port: PORT }, resolve));
+      console.log('🚀 Server ready at http://localhost:4000');
+   })
+   .catch((err) => {
+      console.log('Database connection error: ' + err);
+   });

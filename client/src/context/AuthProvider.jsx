@@ -7,6 +7,7 @@ export const AuthContext = createContext();
 // eslint-disable-next-line react/prop-types
 export default function AuthProvider({ children }) {
    const navigate = useNavigate();
+   const [user, setUser] = useState({});
    const auth = getAuth();
    useEffect(() => {
       const unsubscribed = auth.onIdTokenChanged((user) => {
@@ -26,6 +27,6 @@ export default function AuthProvider({ children }) {
       };
       // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [auth]);
-   const [user, setUser] = useState({});
+
    return <AuthContext.Provider value={{ user, setUser }}>{children}</AuthContext.Provider>;
 }

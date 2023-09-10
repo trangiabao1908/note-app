@@ -4,6 +4,10 @@ export const FoldersLoader = async () => {
                                        name
                                        id
                                        createdAt
+                                        notes {
+                                                id
+                                                content
+                                             }
                                     }
                                     }`;
    const res = await fetch('http://localhost:4000/graphql', {
@@ -17,5 +21,6 @@ export const FoldersLoader = async () => {
    });
 
    const { data } = await res.json();
+
    return data;
 };
