@@ -4,6 +4,13 @@ import Home from '../pages/Home';
 import AuthProvider from '../context/AuthProvider';
 import ProtectedRoute from './ProtectedRoute';
 import ErrorLayout from './ErrorLayout';
+import NoteList from '../components/NoteList/NoteList';
+import Note from '../components/Note/Note';
+import { NoteListLoader } from '../utils/NoteListLoader';
+import { FoldersLoader } from '../utils/FoldersLoader';
+import { NoteLoader } from '../utils/NoteLoader';
+
+// eslint-disable-next-line react-refresh/only-export-components
 const AuthLayout = () => {
    return (
       <AuthProvider>
@@ -26,6 +33,21 @@ const router = createBrowserRouter([
                {
                   element: <Home />,
                   path: '/',
+                  loader: FoldersLoader,
+                  children: [
+                     {
+                        element: <NoteList></NoteList>,
+                        path: 'folders/:folderId',
+                        loader: NoteListLoader,
+                        children: [
+                           {
+                              element: <Note />,
+                              loader: NoteLoader,
+                              path: 'note/:noteId',
+                           },
+                        ],
+                     },
+                  ],
                },
             ],
          },
