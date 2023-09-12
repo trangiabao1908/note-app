@@ -16,7 +16,11 @@ export default function Home() {
             <UserMenu></UserMenu>
          </Box>
 
-         <Grid container sx={{ height: '50vh', boxShadow: '0 0 15px 0 rgb(193 193 193 / 60%)' }}>
+         <Grid
+            container
+            sx={{ height: '50vh', boxShadow: '0 0 15px 0 rgb(193 193 193 / 60%)' }}
+            style={{ userSelect: 'none' }}
+         >
             <Grid item xs={3} sx={{ height: '100%' }}>
                <FolderList folders={data.folders}></FolderList>
             </Grid>

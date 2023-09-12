@@ -1,11 +1,11 @@
 import { Schema } from 'mongoose';
 import fakeData from '../fakeData/index.js';
-import { FolderModel } from '../models/index.js';
+import { AuthorModel, FolderModel } from '../models/index.js';
 export const resolvers = {
    Query: {
-      folders: async () => {
-         const folder = await FolderModel.find();
-
+      folders: async (parent, args, context) => {
+         const folder = await FolderModel.find({ authorId: context.uid });
+         console.log(context.uid);
          return folder;
          // return fakeData.folders;
       },
@@ -21,10 +21,11 @@ export const resolvers = {
       },
    },
    Folder: {
-      author: (parent, args) => {
+      author: async (parent, args) => {
          console.log({ parent, args });
          const authorId = parent.authorId;
-         return fakeData.authors.find((author) => author.id === authorId);
+         const foundAuthor = await AuthorModel.findOne({ uid: `${authorId}` });
+         return foundAuthor;
       },
       notes: (parent, args) => {
          const folderId = parent.id;
@@ -32,10 +33,19 @@ export const resolvers = {
       },
    },
    Mutation: {
-      addFolder: async (parent, args) => {
-         const newFolder = new FolderModel({ ...args, authorId: '123' });
+      addFolder: async (parent, args, context) => {
+         const newFolder = new FolderModel({ ...args, authorId: context.uid });
          await newFolder.save();
          return newFolder;
+      },
+      register: async (parent, args) => {
+         const findAuthor = await AuthorModel.findOne({ uid: args.uid });
+         if (!findAuthor) {
+            const newAuthor = new AuthorModel(args);
+            await newAuthor.save();
+            return newAuthor;
+         }
+         return findAuthor;
       },
    },
 };

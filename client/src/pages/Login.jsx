@@ -3,19 +3,35 @@ import Button from '@mui/material/Button';
 import { GoogleAuthProvider, signInWithPopup, getAuth } from 'firebase/auth';
 import { useContext } from 'react';
 import { AuthContext } from '../context/AuthProvider';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
+import { graphqlResquest } from '../utils/request';
 export default function Login() {
    const auth = getAuth();
-   const navigate = useNavigate();
    const { user } = useContext(AuthContext);
    const handleLogin = async () => {
       const provider = new GoogleAuthProvider();
-      const res = await signInWithPopup(auth, provider);
-      console.log(res);
+
+      const {
+         user: { uid, displayName },
+      } = await signInWithPopup(auth, provider);
+      const query = `mutation Register($name: String!, $uid: String!) {
+                     register(name: $name, uid: $uid) {
+                        createdAt
+                        name
+                        uid
+                     }
+                     }`;
+      const data = await graphqlResquest({
+         query,
+         variables: {
+            uid: uid,
+            name: displayName,
+         },
+      });
+      console.log('resgister: ', data.register);
    };
-   if (user?.uid) {
-      navigate('/');
-      return;
+   if (localStorage.getItem('access_token')) {
+      return <Navigate to="/"></Navigate>;
    }
    return (
       <>

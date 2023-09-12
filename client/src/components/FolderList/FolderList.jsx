@@ -1,8 +1,9 @@
 /* eslint-disable react/prop-types */
-import { Card, CardContent, List, Typography } from '@mui/material';
+import { Box, Card, CardContent, List, Typography } from '@mui/material';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
+import NewFolder from '../NewFolder/NewFolder';
 export default function FolderList({ folders }) {
    const { folderId } = useParams();
    const [folderID, setfolderID] = useState(folderId);
@@ -19,7 +20,12 @@ export default function FolderList({ folders }) {
             textAlign: 'left',
             overflowY: 'auto',
          }}
-         subheader={<Typography sx={{ fontWeight: 'bold', color: 'white' }}>Folders</Typography>}
+         subheader={
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+               <Typography sx={{ fontWeight: 'bold', color: 'white' }}>Folders</Typography>
+               <NewFolder></NewFolder>
+            </Box>
+         }
       >
          {folders.map(({ id, name }) => {
             return (
@@ -31,7 +37,7 @@ export default function FolderList({ folders }) {
                >
                   <Card sx={{ mb: '5px', bgcolor: id === folderID ? 'rgb(255 211 140)' : null }}>
                      <CardContent sx={{ '&:last-child': { padding: '10px' }, padding: '10px' }}>
-                        <Typography>{name}</Typography>
+                        <Typography sx={{ fontWeight: 'bold' }}>{name}</Typography>
                      </CardContent>
                   </Card>
                </Link>

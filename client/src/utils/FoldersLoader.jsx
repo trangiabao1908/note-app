@@ -1,3 +1,4 @@
+import { graphqlResquest } from './request.js';
 export const FoldersLoader = async () => {
    const query = `query Folders {
                                     folders {
@@ -10,17 +11,7 @@ export const FoldersLoader = async () => {
                                              }
                                     }
                                     }`;
-   const res = await fetch('http://localhost:4000/graphql', {
-      method: 'POST',
-      headers: {
-         'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-         query,
-      }),
-   });
 
-   const { data } = await res.json();
-
+   const data = await graphqlResquest({ query });
    return data;
 };
