@@ -4,6 +4,7 @@ import { AuthContext } from '../../context/AuthProvider';
 import { getAuth } from 'firebase/auth';
 import Logout from '@mui/icons-material/Logout';
 import ListItemIcon from '@mui/material/ListItemIcon';
+import React from 'react';
 export default function UserMenu() {
    const auth = getAuth();
    const { user } = useContext(AuthContext);
@@ -22,8 +23,8 @@ export default function UserMenu() {
    };
 
    return (
-      <>
-         <Box sx={{ display: 'flex', alignItems: 'center' }} onClick={handleOpemLogout}>
+      <React.Fragment>
+         <Box sx={{ display: 'flex', alignItems: 'center' }} onClick={handleOpemLogout} onMouseOver={handleOpemLogout}>
             <Typography>{user.displayName}</Typography>
             <Avatar alt="" src={user.photoURL} sx={{ width: '26px', height: '26px', ml: '5px' }}></Avatar>
          </Box>
@@ -35,6 +36,6 @@ export default function UserMenu() {
                Logout
             </MenuItem>
          </Menu>
-      </>
+      </React.Fragment>
    );
 }

@@ -1,4 +1,5 @@
 import { Typography } from '@mui/material';
+import React from 'react';
 import Button from '@mui/material/Button';
 import { GoogleAuthProvider, signInWithPopup, getAuth } from 'firebase/auth';
 import { useContext } from 'react';
@@ -34,13 +35,13 @@ export default function Login() {
       return <Navigate to="/"></Navigate>;
    }
    return (
-      <>
+      <React.Fragment>
          <Typography sx={{ marginBottom: '10px' }} variant="h5">
             Welcome to Note App
          </Typography>
          <Button variant="outlined" onClick={handleLogin}>
             Login With Google
          </Button>
-      </>
+      </React.Fragment>
    );
 }

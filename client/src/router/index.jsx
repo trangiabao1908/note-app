@@ -9,7 +9,8 @@ import Note from '../components/Note/Note';
 import { NoteListLoader } from '../utils/NoteListLoader';
 import { FoldersLoader } from '../utils/FoldersLoader';
 import { NoteLoader } from '../utils/NoteLoader';
-
+import { addNewNote } from '../utils/NoteListLoader';
+import { updateNote } from '../utils/NoteLoader';
 // eslint-disable-next-line react-refresh/only-export-components
 const AuthLayout = () => {
    return (
@@ -39,10 +40,12 @@ const router = createBrowserRouter([
                         element: <NoteList></NoteList>,
                         path: 'folders/:folderId',
                         loader: NoteListLoader,
+                        action: addNewNote,
                         children: [
                            {
                               element: <Note />,
                               loader: NoteLoader,
+                              action: updateNote,
                               path: 'note/:noteId',
                            },
                         ],
