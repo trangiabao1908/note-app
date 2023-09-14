@@ -3,7 +3,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import { createClient } from 'graphql-ws';
 import { Badge, Menu, MenuItem } from '@mui/material';
 const client = createClient({
-   url: 'ws://note-app-clone-server-c4f8.onrender.com',
+   url: 'wss://note-app-clone-server-c4f8.onrender.com',
 });
 const query = `subscription Subscription {
   pushNotification {
