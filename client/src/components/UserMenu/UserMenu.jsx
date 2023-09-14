@@ -24,7 +24,7 @@ export default function UserMenu() {
 
    return (
       <React.Fragment>
-         <Box sx={{ display: 'flex', alignItems: 'center' }} onClick={handleOpemLogout} onMouseOver={handleOpemLogout}>
+         <Box sx={{ display: 'flex', alignItems: 'center' }} onClick={handleOpemLogout}>
             <Typography>{user.displayName}</Typography>
             <Avatar alt="" src={user.photoURL} sx={{ width: '26px', height: '26px', ml: '5px' }}></Avatar>
          </Box>
